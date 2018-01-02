@@ -5,7 +5,7 @@ from pypot.primitive import LoopPrimitive
 
 class TagFollower(LoopPrimitive):
     def __init__(self, robot):
-        LoopPrimitive.__init__(self, robot, 1
+        LoopPrimitive.__init__(self, robot, 1.)
 
         def camera_parameters():
             data = json.load('../configuration/camera_calibration.json')
