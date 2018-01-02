@@ -11,10 +11,10 @@ class TagFollower(LoopPrimitive):
         LoopPrimitive.__init__(self, robot, 1.)
 
         def camera_parameters():
-            base_path = os.path.absath(os.path.join(os.path.dirname(__file__),os.pardir))
-            data_path = os.path.join(os.path.join(base_path, 'configuration'), 'camera_calibratione.json')
+            base_path = os.path.abspath(os.path.join(os.path.dirname(__file__),os.pardir))
+            data_path = os.path.join(os.path.join(base_path, 'configuration'), 'camera_calibration.json')
             data = json.load(open(data_path))
-            return data['mtx'], data['dist']
+            return np.matrix(data['mtx']),np.array(data['dist'])
 
         self.camera_parameters = camera_parameters
     def setup(self):
@@ -40,16 +40,16 @@ class TagFollower(LoopPrimitive):
 
 
     def update(self):
-        frame = poppy.camera.frame
-        marker = aruco.detectMarkers(frame,dictionary)
-        if markers[0]>0:
+        frame = self.robot.camera.frame
+        marker = aruco.detectMarkers(frame,self.dictionary)
+        if marker[0]:
             estimated_pose = aruco.estimatePoseSingleMarkers(marker[0],0.027,self.matrix,self.distribution)
             position = estimated_pose[1][0][0]
-            M[:3,3] = position
-            inverse = np.round(popy.chain.inverse_kinematics(M, initial_position=poppy.chain.convert_to_ik_angles(poppy.chain.joints_position),**kwargs),3)
-            inverse_ik = poppy.chain.convert_from_ik_angles(inverse)
-            for i in range(len(robot.motors)-1):
-                robot.motors[i].goto_position(inverse_ik[i],1)
+            self.M[:3,3] = position
+            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position),**self.kwargs),3)
+            inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
+            for i in range(len(self.robot.motors)):
+                self.robot.motors[i].goto_position(inverse_ik[i],1)
 
 
     def teardown(self):
