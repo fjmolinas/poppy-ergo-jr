@@ -9,7 +9,7 @@ class TagFollower(LoopPrimitive):
         LoopPrimitive.__init__(self, robot, 1.)
 
         def camera_parameters():
-            data = json.load('../configuration/camera_calibration.json')
+            data = json.load(open('../configuration/camera_calibration.json'))
             return data['mtx'], data['dist']
 
         self.camera_parameters = camera_parameters
