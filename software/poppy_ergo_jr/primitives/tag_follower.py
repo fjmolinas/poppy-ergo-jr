@@ -11,7 +11,7 @@ class TagFollower(LoopPrimitive):
         LoopPrimitive.__init__(self, robot, 1.)
 
         def camera_parameters():
-            base_path = os.path.join(os.path.dirname(__file__),os.pardir)
+            base_path = os.path.absath(os.path.join(os.path.dirname(__file__),os.pardir))
             data_path = os.path.join(os.path.join(base_path, 'configuration'), 'camera_calibratione.json')
             data = json.load(open(data_path))
             return data['mtx'], data['dist']
