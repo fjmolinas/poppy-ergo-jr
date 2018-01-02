@@ -1,6 +1,8 @@
 from cv2 import aruco
 import numpy as np
 import json
+import os
+
 
 from pypot.primitive import LoopPrimitive
 
@@ -9,7 +11,9 @@ class TagFollower(LoopPrimitive):
         LoopPrimitive.__init__(self, robot, 1.)
 
         def camera_parameters():
-            data = json.load(open('../configuration/camera_calibration.json'))
+            base_path = os.path.dirname(__file__)
+            data_path = os.path.join(os.path.join(base_path, 'configuration'), 'camera_calibration.json')
+            data = json.load(open(data_path))
             return data['mtx'], data['dist']
 
         self.camera_parameters = camera_parameters
@@ -28,6 +32,7 @@ class TagFollower(LoopPrimitive):
             m.led = 'green'
 
         """Camera & aruco setup"""
+
         self.dictionary = aruco.getPredefinedDictionary(aruco.DICT_5X5_250)
         self.matrix,self.distribution = self.camera_parameters()
         self.M = np.eye(4)
