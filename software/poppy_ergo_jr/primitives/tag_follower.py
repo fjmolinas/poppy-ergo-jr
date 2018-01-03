@@ -38,6 +38,7 @@ class TagFollower(LoopPrimitive):
         self.matrix,self.distribution = self.camera_parameters()
         self.M = np.eye(4)
         self.kwargs = {}
+        self.angle = np.pi/3
 
 
     def update(self):
@@ -46,7 +47,7 @@ class TagFollower(LoopPrimitive):
         if marker[0]:
             estimated_pose = aruco.estimatePoseSingleMarkers(marker[0],0.027,self.matrix,self.distribution)
             position = estimated_pose[1][0][0]
-            self.M[:3,3] = position
+            self.M[:3,3] = (position[0], -1.*position[3]*np.cos(self.angle), position[3]*np.sin(self.angle)-position[2]*np.sin(np.pi/6))
             inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position),**self.kwargs),3)
             inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
             for i in range(len(self.robot.motors)):
