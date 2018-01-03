@@ -56,4 +56,4 @@ class TagFollower(LoopPrimitive):
 
         for m in self.robot.motors:
             m.led = 'off'
-	        m.compliant = True
+            m.compliant = True
