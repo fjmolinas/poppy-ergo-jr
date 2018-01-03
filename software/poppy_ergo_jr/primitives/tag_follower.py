@@ -14,7 +14,8 @@ class TagFollower(LoopPrimitive):
             base_path = os.path.abspath(os.path.join(os.path.dirname(__file__),os.pardir))
             data_path = os.path.join(os.path.join(base_path, 'configuration'), 'camera_calibration.json')
             data = json.load(open(data_path))
-            return np.matrix(data['mtx']),np.array(data['dist'])
+            matrix = np.array([np.array(xi) for xi in data['mtx']])
+            return matrix, np.array(data['dist'])
 
         self.camera_parameters = camera_parameters
     def setup(self):
@@ -53,7 +54,7 @@ class TagFollower(LoopPrimitive):
 
 
     def teardown(self):
-        [s.stop() for s in self.sinus]
 
         for m in self.robot.motors:
             m.led = 'off'
+	    m.compliant = True
