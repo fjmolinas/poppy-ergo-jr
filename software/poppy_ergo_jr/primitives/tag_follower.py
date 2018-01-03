@@ -32,7 +32,7 @@ class TagFollower(LoopPrimitive):
             m.led = 'green'
 
         """Camera & aruco setup"""
-        self.dictionary = cv2.aruco.getPredefinedDictionary(aruco.DICT_5X5_250)
+        self.dictionary = cv2.aruco.getPredefinedDictionary(aruco.DICT_6X6_250)
         self.camera_matrix,self.distrib = self.camera_parameters()
         self.M = np.eye(4)
         self.kwargs = {}
