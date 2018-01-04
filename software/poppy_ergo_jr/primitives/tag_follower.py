@@ -46,7 +46,7 @@ class TagFollower(LoopPrimitive):
             rvecs,tvecs,objects = cv2.aruco.estimatePoseSingleMarkers(marker[0],0.027,self.camera_matrix,self.distrib)
             position = tvecs[0][0]
             self.M[:3,3] = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))#(position[0], position[2]*np.cos(np.pi/3), position[2]*np.sin(np.pi/3)-position[1]*np.sin(np.pi/6))
-            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position), **kwargs),3)
+            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position), **self.kwargs),3)
             inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
             for i in range(len(self.robot.motors)):
                 self.robot.motors[i].goto_position(inverse_ik[i],1)
