@@ -1,6 +1,6 @@
 import cv2
-import numpy as np
 import json
+import numpy as np
 import os
 
 
@@ -18,7 +18,13 @@ class TagFollower(LoopPrimitive):
 
         self.camera_parameters = camera_parameters
     def setup(self):
-        """Motor setup"""
+        """
+            First part is motor setup and then camera & cv2.aruco setup:
+                * dictionary define the aruco dictionary that you use.
+                * camera_matrix and distrib define the intrinsec and distribution camera calibration.
+                * angle define the angle of camera in ergo_jr base
+                * marker_lenght define the marker size in meters
+        """
         for m in self.robot.motors:
             m.compliant = False
 
@@ -31,26 +37,23 @@ class TagFollower(LoopPrimitive):
         for m in self.robot.motors:
             m.led = 'green'
 
-        """Camera & aruco setup"""
         self.dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
         self.camera_matrix,self.distrib = self.camera_parameters()
-        self.M = np.eye(4)
-        self.kwargs = {}
         self.angle = np.pi/3
+        self.marker_lenght = 0.027
 
 
     def update(self):
+        """
+            Search in robot camera all the aruco markers and take the first to follow.
+        """
         frame = self.robot.camera.frame
         marker = cv2.aruco.detectMarkers(frame,self.dictionary)
         if marker[0]:
-            rvecs,tvecs,objects = cv2.aruco.estimatePoseSingleMarkers(marker[0],0.027,self.camera_matrix,self.distrib)
+            rvecs,tvecs,objects = cv2.aruco.estimatePoseSingleMarkers(marker[0],self.marker_lenght,self.camera_matrix,self.distrib)
             position = tvecs[0][0]
-            self.M[:3,3] = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))#(position[0], position[2]*np.cos(np.pi/3), position[2]*np.sin(np.pi/3)-position[1]*np.sin(np.pi/6))
-            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position), **self.kwargs),3)
-            inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
-            for i in range(len(self.robot.motors)):
-                self.robot.motors[i].goto_position(inverse_ik[i],1)
-
+            position_to_go = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
+            self.robot.chain.goto(position_to_go, 1, accurate=True)
 
     def teardown(self):
 
