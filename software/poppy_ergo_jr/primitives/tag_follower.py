@@ -41,6 +41,8 @@ class TagFollower(LoopPrimitive):
         self.camera_matrix,self.distrib = self.camera_parameters()
         self.angle = np.pi/3
         self.marker_lenght = 0.027
+        self.M = np.eye(4)
+        self.kwargs = {}
 
 
     def update(self):
@@ -52,9 +54,11 @@ class TagFollower(LoopPrimitive):
         if marker[0]:
             rvecs,tvecs,objects = cv2.aruco.estimatePoseSingleMarkers(marker[0],self.marker_lenght,self.camera_matrix,self.distrib)
             position = tvecs[0][0]
-            position_to_go = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
-            self.robot.chain.goto(position_to_go, 1, accurate=True)
-
+            self.M[:3,3] = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
+            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position), **self.kwargs),3)
+            inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
+            for i in range(len(self.robot.motors)):
+                self.robot.motors[i].goto_position(inverse_ik[i],1)
     def teardown(self):
 
         for m in self.robot.motors:
