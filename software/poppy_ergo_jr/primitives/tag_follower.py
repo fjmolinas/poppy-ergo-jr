@@ -28,8 +28,9 @@ class TagFollower(LoopPrimitive):
         for m in self.robot.motors:
             m.compliant = False
 
-        init_pos = dict([(m.name, 0.0) for m in self.robot.motors])
-        self.robot.goto_position(init_pos, 3., wait=True)
+        idle_prim = IdlePosture(self.robot, 3.0)
+        idle_prim.start()
+        idle_prim.wait_to_stop()
 
         for m in self.robot.motors:
             m.moving_speed = 70.
@@ -60,7 +61,9 @@ class TagFollower(LoopPrimitive):
             for i in range(len(self.robot.motors)):
                 self.robot.motors[i].goto_position(inverse_ik[i],1)
     def teardown(self):
-
+        idle_prim = IdlePosture(self.robot, 3.0)
+        idle_prim.start()
+        idle_prim.wait_to_stop()
         for m in self.robot.motors:
             m.led = 'off'
             m.compliant = True
