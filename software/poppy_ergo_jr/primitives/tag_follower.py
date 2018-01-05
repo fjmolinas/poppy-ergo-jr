@@ -5,6 +5,7 @@ import os
 
 
 from pypot.primitive import LoopPrimitive
+from .postures import IdlePosture
 
 class TagFollower(LoopPrimitive):
     def __init__(self, robot):
