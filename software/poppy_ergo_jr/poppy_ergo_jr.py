@@ -19,7 +19,7 @@ class PoppyErgoJr(AbstractPoppyCreature):
 
         c = IKChain.from_poppy_creature(robot,
                                         motors=robot.motors,
-                                        passiv=[],
+                                        passiv=[robot.m6],
                                         tip=[0, 0, -0.07])
 
         robot.chain = c

@@ -274,7 +274,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/section_4.STL" />
+          filename="package://PoppyErgoJr/meshes/holder_section.STL" />
       </geometry>
       <material
         name="">
@@ -288,7 +288,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/section_4.STL" />
+          filename="package://PoppyErgoJr/meshes/holder_section.STL" />
       </geometry>
     </collision>
   </link>
@@ -327,7 +327,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/tip.STL" />
+          filename="package://PoppyErgoJr/meshes/holder_visual.STL" />
       </geometry>
       <material
         name="">
@@ -341,7 +341,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/tip.STL" />
+          filename="package://PoppyErgoJr/meshes/holder_visual.STL" />
       </geometry>
     </collision>
   </link>
