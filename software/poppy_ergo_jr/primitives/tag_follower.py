@@ -7,7 +7,7 @@ import time
 
 
 from pypot.primitive import LoopPrimitive
-from .postures import IdlePosture
+from .postures import SafePowerUp
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +34,9 @@ class TagFollower(LoopPrimitive):
         for m in self.robot.motors:
             m.compliant = False
 
-        idle_prim = IdlePosture(self.robot, 3.0)
-        idle_prim.start()
-        idle_prim.wait_to_stop()
+        safe_prim = SafePowerUp(self.robot)
+        safe_prim.start()
+        safe_prim.wait_to_stop()
 
         for m in self.robot.motors:
             m.moving_speed = 70.
@@ -74,9 +74,9 @@ class TagFollower(LoopPrimitive):
             logger.info("time spent in move to position: {}".format((time.clock()-init_time)/1000.))
 
     def teardown(self):
-        idle_prim = IdlePosture(self.robot, 3.0)
-        idle_prim.start()
-        idle_prim.wait_to_stop()
+        safe_prim = SafePowerUp(self.robot)
+        safe_prim.start()
+        safe_prim.wait_to_stop()
         for m in self.robot.motors:
             m.led = 'off'
             m.compliant = True
