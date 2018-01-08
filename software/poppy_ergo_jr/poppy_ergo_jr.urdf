@@ -327,7 +327,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/holder_visual.STL" />
+          filename="package://PoppyErgoJr/meshes/holder.STL" />
       </geometry>
       <material
         name="">
@@ -341,7 +341,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://PoppyErgoJr/meshes/holder_visual.STL" />
+          filename="package://PoppyErgoJr/meshes/holder.STL" />
       </geometry>
     </collision>
   </link>
