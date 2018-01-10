@@ -47,7 +47,7 @@ class TagFollower(LoopPrimitive):
         self.dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
         self.camera_matrix,self.distrib = self.camera_parameters()
         self.angle = np.pi/3
-        self.marker_lenght = 0.027
+        self.marker_lenght = 0.018
         self.M = np.eye(4)
         self.kwargs = {}
 
