@@ -6,7 +6,6 @@ from pypot.creatures.ik import IKChain
 
 from .primitives.dance import Dance
 from .primitives.face_tracking import FaceTracking
-from .primitives.tag_follower import TagFollower
 from .primitives.tracking_feedback import TrackingFeedback
 from .primitives.postures import (BasePosture, RestPosture,
                                   CuriousPosture, TetrisPosture,
@@ -33,9 +32,6 @@ class PoppyErgoJr(AbstractPoppyCreature):
         robot.attach_primitive(RestPosture(robot, 2.), 'rest_posture')
         robot.attach_primitive(CuriousPosture(robot, 2.), 'curious_posture')
         robot.attach_primitive(TetrisPosture(robot, 2.), 'tetris_posture')
-
-        if not robot.simulated:
-            robot.attach_primitive(TagFollower(robot, robot.aruco_marker_detector,1), 'tag_follower',)
 
         if not robot.simulated and hasattr(robot, 'marker_detector'):
             robot.attach_primitive(TrackingFeedback(robot, 25.),
