@@ -35,7 +35,7 @@ class PoppyErgoJr(AbstractPoppyCreature):
         robot.attach_primitive(TetrisPosture(robot, 2.), 'tetris_posture')
 
         if not robot.simulated:
-            robot.attach_primitive(TagFollower(robot), 'tag_follower')
+            robot.attach_primitive(TagFollower(robot, robot.aruco_marker_detector,1), 'tag_follower',)
 
         if not robot.simulated and hasattr(robot, 'marker_detector'):
             robot.attach_primitive(TrackingFeedback(robot, 25.),
