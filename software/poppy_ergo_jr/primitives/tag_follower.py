@@ -23,7 +23,7 @@ class TagFollower(LoopPrimitive):
                 return marker[0]
             return None
         self.get_marker_position = get_marker_position
-    
+
     def setup(self):
         """
             First part is motor setup and then camera & cv2.aruco setup:
@@ -55,18 +55,14 @@ class TagFollower(LoopPrimitive):
         init_time = time.clock()
         marker = self.get_marker_position()
 
-        logger.info("time spent in detect marker: {}".format((time.clock()-init_time)/1000.))
         if marker is not None:
             rvecs,tvecs,objects = marker[0:3]
             position = tvecs[0][0]
-            self.M[:3,3] = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
-            inverse = np.round(self.robot.chain.inverse_kinematics(self.M, initial_position=self.robot.chain.convert_to_ik_angles(self.robot.chain.joints_position), **self.kwargs),3)
-            logger.info("time spent in get ik: {}".format((time.clock()-init_time)/1000.))
-            inverse_ik = self.robot.chain.convert_from_ik_angles(inverse)
-            for i in range(len(self.robot.motors)):
-                self.robot.motors[i].led = 'blue'
-                self.robot.motors[i].goto_position(inverse_ik[i],1)
-            logger.info("time spent in move to position: {}".format((time.clock()-init_time)/1000.))
+            position = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
+            move = MoveToPosition(self.robot,position,1)
+            move.start()
+            move.wait_to_stop()
+
         else:
             for m in self.robot.motors:
                 m.led = 'red'
