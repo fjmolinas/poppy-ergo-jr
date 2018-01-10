@@ -8,6 +8,7 @@ import time
 
 from pypot.primitive import LoopPrimitive
 from .postures import SafePowerUp
+from .move import MoveToPosition
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ class TagFollower(LoopPrimitive):
             position = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
             move = MoveToPosition(self.robot,position,1)
             move.start()
-            move.wait_to_stop()
+           
 
         else:
             for m in self.robot.motors:
