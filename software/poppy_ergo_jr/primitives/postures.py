@@ -7,7 +7,18 @@ class BasePosture(SimplePosture):
     def target_position(self):
         return {m.name: 0. for m in self.robot.motors}
 
-
+class BasePostureGripper(SimplePosture):
+    @property
+    def target_position(self):
+        return {
+            'm1': 0, 
+            'm2': -60.,
+            'm3': 20., 
+            'm4': 0., 
+            'm5': 30.,
+            
+        }
+    
 class RestPosture(SimplePosture):
     @property
     def leds(self):

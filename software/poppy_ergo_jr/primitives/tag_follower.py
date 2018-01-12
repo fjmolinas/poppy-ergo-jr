@@ -1,17 +1,8 @@
-import cv2
-import json
 import numpy as np
-import os
-import logging
-import time
-
 
 from pypot.primitive import LoopPrimitive
-from .postures import SafePowerUp
+from .postures import SafePowerUp,BasePostureGripper
 from .move import MoveToPosition
-
-logger = logging.getLogger(__name__)
-
 
 class TagFollower(LoopPrimitive):
     def __init__(self, robot, detector, marker_id):
@@ -36,9 +27,9 @@ class TagFollower(LoopPrimitive):
         for m in self.robot.motors:
             m.compliant = False
 
-        safe_prim = SafePowerUp(self.robot)
-        safe_prim.start()
-        safe_prim.wait_to_stop()
+        base_prim = BasePostureGripper(self.robot,3)
+        base_prim.start()
+        base_prim.wait_to_stop()
 
         for m in self.robot.motors:
             m.moving_speed = 70.
@@ -51,14 +42,13 @@ class TagFollower(LoopPrimitive):
         """
             Search in robot camera all the aruco markers and take the first to follow.
         """
-        init_time = time.clock()
         marker = self.get_marker_position()
 
         if marker is not None:
             rvecs,tvecs,objects = marker[0:3]
             position = tvecs[0][0]
-            position = (position[0],-1.*position[2]*np.sin(self.angle)-position[1]*np.sin(np.pi/2 - self.angle),position[2]*np.cos(self.angle))
-            move = MoveToPosition(self.robot,position,1)
+            position = (position[0],-1.*(position[2]*np.sin(self.angle)+position[1]*np.sin(np.pi/2 - self.angle)),position[2]*np.cos(self.angle)-position[1]*np.cos(np.pi/2-self.angle)-0.03)
+            move = MoveToPosition(self.robot,position)
             move.start()
            
 
