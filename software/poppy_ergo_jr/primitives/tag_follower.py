@@ -18,11 +18,7 @@ class TagFollower(LoopPrimitive):
 
     def setup(self):
         """
-            First part is motor setup and then camera & cv2.aruco setup:
-                * dictionary define the aruco dictionary that you use.
-                * camera_matrix and distrib define the intrinsec and distribution camera calibration.
-                * angle define the angle of camera in ergo_jr base
-                * marker_lenght define the marker size in meters
+            Use BasePostureGripper to get a better range with the camera.
         """
         for m in self.robot.motors:
             m.compliant = False
@@ -40,7 +36,7 @@ class TagFollower(LoopPrimitive):
 
     def update(self):
         """
-            Search in robot camera all the aruco markers and take the first to follow.
+            Search in robot camera the aruco marker if exist, it will be followed.
         """
         marker = self.get_marker_position()
 
@@ -50,7 +46,7 @@ class TagFollower(LoopPrimitive):
             position = (position[0],-1.*(position[2]*np.sin(self.angle)+position[1]*np.sin(np.pi/2 - self.angle)),position[2]*np.cos(self.angle)-position[1]*np.cos(np.pi/2-self.angle)-0.03)
             move = MoveToPosition(self.robot,position)
             move.start()
-           
+
 
         else:
             for m in self.robot.motors:
