@@ -65,9 +65,10 @@ class TagHold(Primitive):
         gripper = self.robot.m6
         gripper.goal_position = 50
         time.sleep(1)
-        while gripper.present_load < 18 and gripper.present_position > -20:
+        while gripper.present_load < 15 and gripper.present_position > -20:
             gripper.goal_position =gripper.present_position - 2
             time.sleep(0.1)
+            print(gripper.goal_position, gripper.present_load)
             
         base_prim = BasePostureGripper(self.robot,3)
         base_prim.start()
